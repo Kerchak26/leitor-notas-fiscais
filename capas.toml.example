@@ -1,0 +1,62 @@
+# Configuração do lançamento nas capas de custos.
+# Copie para "capas.toml" e ajuste. O capas.toml não vai para o Git (.gitignore),
+# porque contém caminhos, CNPJs e endereços reais da sua empresa.
+# Caminhos de rede do Windows: use aspas simples, ex.: '\\servidor\financeiro\Custos'
+
+# Pasta onde ficam as capas ORIGINAIS (o programa só lê, nunca altera)
+pasta_capas = 'dados/capas_originais'
+
+# Onde o programa grava as cópias para conferência e o relatorio_capas.xlsx
+pasta_conferencia = 'dados/capas_para_conferencia'
+
+# Em qual mês da capa a nota entra: "vencimento" (do boleto) ou "emissao"
+mes_referencia = "vencimento"
+
+
+# ---------------------------------------------------------------- unidades ----
+# A unidade da nota é identificada, nesta ordem:
+#   1. por uma [[regras]] (abaixo), quando houver;
+#   2. pelo CNPJ do destinatário/tomador da nota;
+#   3. pelo endereço do destinatário (basta um trecho, ex.: "Rua das Acácias, 100");
+#   4. por uma palavra no assunto do e-mail encaminhado.
+# Se mais de uma unidade servir, a nota fica pendente no relatório.
+
+[[unidades]]
+nome = "Centro"
+arquivo = "2026 - Custos - Unidade Centro.xlsx"
+cnpjs = ["11.111.111/0001-11"]
+enderecos = ["Rua das Acácias, 100"]
+palavras_email = ["centro"]
+
+[[unidades]]
+nome = "Norte"
+arquivo = "2026 - Custos - Unidade Norte.xlsx"
+cnpjs = ["11.111.111/0002-00"]
+enderecos = ["Av. Atlântica, 500"]
+palavras_email = ["norte"]
+
+
+# ------------------------------------------------------------------ regras ----
+# Exceções. A primeira regra que servir é usada. Campos:
+#   fornecedor    (obrigatório) trecho do nome ou CNPJ do emitente
+#   unidade       força a unidade (notas com o endereço de uma unidade que são de outra)
+#   aba           nome exato da aba, quando ele não lembra o nome do fornecedor
+#   contrato      texto da coluna "Contratos", quando a aba tem mais de um contrato
+#   endereco      a regra só vale se o endereço da nota contiver este trecho
+#   palavra_email a regra só vale se o assunto do e-mail contiver esta palavra
+
+# A marca "Gama" emite as notas pela razão social "Ômega Telecomunicações"
+[[regras]]
+fornecedor = "OMEGA TELECOMUNICACOES"
+aba = "Gama - Telefonia Móvel"
+
+# O contrato da Alfa Telecom é sempre da Unidade Centro, mesmo com notas no endereço da Norte
+[[regras]]
+fornecedor = "ALFA TELECOM"
+unidade = "Centro"
+
+# A Delta Print tem dois contratos na mesma aba; as notas da Unidade Norte são da franquia
+[[regras]]
+fornecedor = "DELTA PRINT"
+endereco = "Av. Atlântica, 500"
+contrato = "Franquia de cópias"
