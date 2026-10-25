@@ -1,0 +1,25 @@
+name: Testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -v
+      - name: Demonstração de ponta a ponta
+        run: |
+          python tests/gerar_exemplos.py
+          python -m nf_reader pasta dados/exemplos --capas capas.toml.example
