@@ -180,7 +180,8 @@ def montar_documento(cenarios, resultados: dict[str, ResultadoRPA], saida_pytest
     commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=RAIZ, capture_output=True, text=True).stdout.strip()
     _tabela(doc, ["Item", "Informação"], [
         ["Projeto", "github.com/Kerchak26/leitor-notas-fiscais"],
-        ["Equipe", "Kaua Queiroga, luenmarbriani, Toxiros0804"],
+        ["Equipe", "Kaua Queiroga, Luenmar Briani e Caio Eduardo"],
+        ["Curso", "Análise e Desenvolvimento de Sistemas · Robotic Process Automation · Prof. Cleber Grafietti"],
         ["Data da execução", datetime.now().strftime("%d/%m/%Y %H:%M")],
         ["Data de referência dos cenários", hoje.strftime("%d/%m/%Y")],
         ["Versão do código", commit or "-"],

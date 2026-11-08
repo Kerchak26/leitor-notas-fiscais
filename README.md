@@ -334,8 +334,8 @@ mescladas, mas descarta imagens e gráficos que existirem na planilha.
 | | |
 |---|---|
 | **Kaua Queiroga** ([@Kerchak26](https://github.com/Kerchak26)) | Autor |
-| [@luenmarbriani](https://github.com/luenmarbriani) | Colaborador |
-| [@Toxiros0804](https://github.com/Toxiros0804) | Colaborador |
+| **Luenmar Briani** ([@luenmarbriani](https://github.com/luenmarbriani)) | Colaborador |
+| **Caio Eduardo** ([@Toxiros0804](https://github.com/Toxiros0804)) | Colaborador |
 
 Quer contribuir? Veja o [guia de contribuição](CONTRIBUTING.md).
 

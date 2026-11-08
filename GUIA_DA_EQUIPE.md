@@ -1,6 +1,6 @@
 # Guia da equipe: RPA Contas a Pagar
 
-Guia prático para **Kaua, @luenmarbriani e @Toxiros0804**: como rodar o robô, onde está
+Guia prático para **Kaua, Luenmar e Caio**: como rodar o robô, onde está
 cada requisito do professor, como gravar o vídeo e como dividir a apresentação.
 
 > **Datas:** prévia em **10/11** · apresentação final em **17/11**.
