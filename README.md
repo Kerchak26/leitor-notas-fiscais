@@ -14,6 +14,10 @@ da unidade certa, no contrato e no mês certos.
 >
 > 👥 **Equipe:** o passo a passo para rodar, testar, gravar o vídeo e apresentar está no
 > **[Guia da equipe](GUIA_DA_EQUIPE.md)**.
+>
+> 📊 **Apresentações:** [completa (PDF)](apresentacoes/Apresentacao_Completa_RPA.pdf) ·
+> [prévia (PDF)](apresentacoes/Apresentacao_Previa_RPA.pdf) · arquivos PowerPoint com o vídeo
+> embutido na pasta [`apresentacoes/`](apresentacoes/).
 
 ---
 

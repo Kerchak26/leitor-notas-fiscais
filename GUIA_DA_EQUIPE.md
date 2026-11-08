@@ -242,7 +242,7 @@ leitor-notas-fiscais/
 
 ## 9. Roteiro e divisão da apresentação
 
-A apresentação tem 18 slides (link compartilhado pelo Kaua). Sugestão de divisão para
+A apresentação tem 18 slides (arquivos em [`apresentacoes/`](apresentacoes/)). Sugestão de divisão para
 cerca de **15 minutos**. Ajustem como preferirem:
 
 | Quem | Slides | Assunto | Tempo |
@@ -297,10 +297,18 @@ pytest, que rodam no GitHub a cada envio.
 
 | Entrega | Status | Onde |
 |---|---|---|
-| Apresentação (case, justificativa, AS-IS, TO-BE, código, vídeo, ganhos) | ✅ pronta; falta só os nomes na capa | Link compartilhado pelo Kaua |
-| Vídeo da execução | ✅ pronto (70 s) | Arquivo enviado pelo Kaua; também está dentro do slide 15 |
+| Apresentação completa, dia 17 (case, justificativa, AS-IS, TO-BE, código, vídeo, ganhos) | ✅ pronta | [`apresentacoes/Apresentacao_Completa_RPA.pptx`](apresentacoes/Apresentacao_Completa_RPA.pptx) e [`.pdf`](apresentacoes/Apresentacao_Completa_RPA.pdf) |
+| Apresentação da prévia, dia 10 (8 slides) | ✅ pronta | [`apresentacoes/Apresentacao_Previa_RPA.pptx`](apresentacoes/Apresentacao_Previa_RPA.pptx) e [`.pdf`](apresentacoes/Apresentacao_Previa_RPA.pdf) |
+| Vídeo da execução | ✅ pronto (70 s) | Embutido nos `.pptx` (slide 15 da completa, slide 7 da prévia) |
 | Código-fonte | ✅ | Este repositório |
 | Evidências de teste (sucesso e insucesso) | ✅ 15/15 cenários aprovados | `python evidencias/gerar_evidencias.py` |
+
+**Sobre os arquivos de apresentação:**
+- Nos `.pptx`, o vídeo toca dentro do slide: clique nele durante a apresentação, ou selecione o
+  vídeo e use **Reprodução → Iniciar: Automaticamente**. Testem no computador da apresentação.
+- Cada slide do `.pptx` é uma imagem, para ficar idêntico em qualquer computador. Por isso o
+  texto não é editável no PowerPoint: alterações são feitas na apresentação original (com o Kaua).
+- No PDF o vídeo não toca; ao chegar no slide do vídeo, abram o vídeo à parte.
 
 ## 12. Trabalhando juntos no GitHub
 
