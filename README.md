@@ -11,6 +11,9 @@ da unidade certa, no contrato e no mês certos.
 > Projeto nascido de uma rotina real de trabalho (conferência e lançamento manual de notas
 > fiscais em planilhas de custos) e desenvolvido também como projeto acadêmico.
 > **Todos os dados deste repositório são fictícios.**
+>
+> 👥 **Equipe:** o passo a passo para rodar, testar, gravar o vídeo e apresentar está no
+> **[Guia da equipe](GUIA_DA_EQUIPE.md)**.
 
 ---
 
@@ -26,7 +29,7 @@ da unidade certa, no contrato e no mês certos.
 - [Arquitetura](#arquitetura)
 - [Testes](#testes)
 - [Limitações e próximos passos](#limitações-e-próximos-passos)
-- [Equipe](#equipe)
+- [Equipe](#equipe) · [Guia da equipe](GUIA_DA_EQUIPE.md)
 
 ---
 
