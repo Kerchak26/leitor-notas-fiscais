@@ -97,6 +97,8 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("caminho", type=Path)
     c = sub.add_parser("capas", parents=[comuns],
                        help="refaz as cópias das capas com as notas já lidas (após mudar capas.toml)")
+    e = sub.add_parser("erp", help="sobe o ERP simulado num servidor http local")
+    e.add_argument("--porta", type=int, default=8000)
     r = sub.add_parser("rpa", parents=[comuns], help="executa o robô completo (regras, API, Excel, ERP, logs)")
     r.add_argument("origem", choices=["email", "pasta"], help="de onde vêm os documentos")
     r.add_argument("caminho", type=Path, nargs="?", help="pasta com os PDFs (origem 'pasta')")
@@ -112,6 +114,12 @@ def main(argv: list[str] | None = None) -> None:
                    help="data de referência dd/mm/aaaa (para testes)")
     r.add_argument("--pasta-saida", type=Path, default=Path("dados"))
     args = ap.parse_args(argv)
+
+    if args.comando == "erp":
+        from .servidor_erp import servir
+
+        servir(args.porta)
+        return
 
     if args.comando == "rpa":
         from .api_brasil import URL_PADRAO

@@ -246,3 +246,20 @@ def test_erp_fora_do_ar_vira_insucesso(cenarios, tmp_path, monkeypatch):
     [av] = resultado.avaliacoes
     assert av.status == INSUCESSO and "ERP" in av.motivos[0]
     assert resultado.relatorio.exists()
+
+
+@pytest.mark.skipif(not _chrome_disponivel(), reason="Chrome/chromedriver não disponível")
+def test_erp_por_http(cenarios, tmp_path, monkeypatch):
+    """O robô também funciona com o ERP servido por http (python -m nf_reader erp)."""
+    from nf_reader.servidor_erp import iniciar_em_segundo_plano
+
+    pasta, _ = cenarios
+    monkeypatch.setattr("nf_reader.rpa.BrasilAPI", lambda *a, **k: ApiFalsa())
+    servidor, url = iniciar_em_segundo_plano()
+    try:
+        [ct01] = list((pasta / "principal").glob("CT01 - *"))
+        [av] = executar(OpcoesRPA(origem="pasta", caminho=ct01, pasta_saida=tmp_path, usar_erp=True,
+                                  url_erp=url, hoje=HOJE)).avaliacoes
+        assert av.protocolo_erp and av.protocolo_erp.startswith("CP-")
+    finally:
+        servidor.shutdown()

@@ -232,7 +232,14 @@ etapas e de cada campo digitado ficam em `dados/logs/rpa_AAAAMMDD_HHMMSS.log`.
 
 **ERP de demonstração:** [`erp_simulado/index.html`](erp_simulado/index.html) imita um sistema
 de contas a pagar (login `rpa.financeiro` / `demo123`, validação de campos, protocolo e
-bloqueio de duplicidade), já que o ERP real da empresa não pode ser usado.
+bloqueio de duplicidade), já que o ERP real da empresa não pode ser usado. Ele pode ser
+usado de três jeitos:
+
+| Como | Endereço | Comando do robô |
+|---|---|---|
+| Arquivo local (padrão) | `erp_simulado/index.html` | `--erp` |
+| Servidor http local | `http://localhost:8000/` (`python -m nf_reader erp`) | `--erp --url-erp http://localhost:8000/` |
+| On-line (GitHub Pages) | https://kerchak26.github.io/leitor-notas-fiscais/erp_simulado/ | `--erp --url-erp https://kerchak26.github.io/leitor-notas-fiscais/erp_simulado/` |
 
 **Cenários e evidências de teste:**
 

@@ -136,6 +136,16 @@ python -m nf_reader rpa --help                    # todas as opções
 O **ERP simulado** também pode ser aberto à mão: dê dois cliques em
 `erp_simulado/index.html` e entre com usuário `rpa.financeiro` e senha `demo123`.
 
+**ERP por http (para testar como um sistema web de verdade):**
+
+| Como | Endereço | Para o robô usar |
+|---|---|---|
+| Servidor local (sem internet) | rode `python -m nf_reader erp` e abra `http://localhost:8000/` | `--erp --url-erp http://localhost:8000/` |
+| On-line, para o professor e os colegas | https://kerchak26.github.io/leitor-notas-fiscais/erp_simulado/ | `--erp --url-erp https://kerchak26.github.io/leitor-notas-fiscais/erp_simulado/` |
+
+O servidor local fica rodando até você apertar **Ctrl+C**. Use outro terminal para rodar o
+robô. Ele é a melhor opção para a apresentação na sala, porque não depende da internet.
+
 ## 4. O que acontece quando o robô roda
 
 Cada etapa aparece no log como `ETAPA n/7`:

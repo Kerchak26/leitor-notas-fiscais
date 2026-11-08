@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RPA Contas a Pagar</title>
+<style>
+  :root { --fundo: #f3f5f8; --cartao: #ffffff; --texto: #1d2633; --suave: #5b6878; --primaria: #1f4e78; --borda: #d6dde6; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 "Segoe UI", Roboto, Arial, sans-serif; background: var(--fundo); color: var(--texto); }
+  main { max-width: 760px; margin: 48px auto; padding: 0 16px; display: grid; gap: 20px; }
+  h1 { margin: 0; font-size: 28px; color: var(--primaria); }
+  p { margin: 0; color: var(--suave); }
+  a.cartao { display: block; background: var(--cartao); border: 1px solid var(--borda); border-radius: 10px; padding: 20px; text-decoration: none; color: inherit; }
+  a.cartao:hover { border-color: var(--primaria); }
+  a.cartao strong { display: block; color: var(--primaria); font-size: 18px; margin-bottom: 4px; }
+  code { background: #e8eef5; padding: 2px 6px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>RPA Contas a Pagar</h1>
+  <p>Robô em Python que lê notas fiscais e boletos recebidos por e-mail, valida, consulta a BrasilAPI e lança os títulos num ERP via Selenium. Todos os dados são fictícios.</p>
+  <a class="cartao" href="erp_simulado/index.html">
+    <strong>ERP simulado (FinSys · Contas a Pagar)</strong>
+    O sistema de demonstração em que o robô digita os títulos. Usuário <code>rpa.financeiro</code>, senha <code>demo123</code>.
+  </a>
+  <a class="cartao" href="https://github.com/Kerchak26/leitor-notas-fiscais">
+    <strong>Código-fonte no GitHub</strong>
+    README, guia da equipe, testes e evidências.
+  </a>
+  <a class="cartao" href="apresentacoes/Apresentacao_Completa_RPA.pdf">
+    <strong>Apresentação (PDF)</strong>
+    Case, justificativa, fluxos AS-IS e TO-BE, código, testes e ganhos.
+  </a>
+</main>
+</body>
+</html>
