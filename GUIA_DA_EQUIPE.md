@@ -29,7 +29,9 @@ cada requisito do professor, como gravar o vídeo e como dividir a apresentaçã
 **O problema:** no setor de Contas a Pagar de uma empresa com várias unidades (nome preservado), o gestor
 encaminha por e-mail as notas fiscais e os boletos dos fornecedores. Para cada nota, um
 analista abre os PDFs, confere nota × boleto, digita tudo no ERP e atualiza a planilha de
-custos ("capa") da unidade. São cerca de [10] minutos por nota, todos os meses.
+custos ("capa") da unidade. São cerca de **8 minutos por nota** e **120 notas por mês**:
+**16 horas** de trabalho manual todo mês. Com o robô, sobra só a conferência (cerca de
+2 horas por mês, uma redução de 88%).
 
 **A solução:** um robô em Python que faz esse trabalho sozinho:
 
@@ -252,8 +254,8 @@ cerca de **15 minutos**. Ajustem como preferirem:
 Cada slide tem **notas do apresentador** com o que falar.
 
 **Antes da prévia (10/11), preencher na apresentação:**
-- [ ] Tempos manuais e volume de notas (os valores entre colchetes, como [10] min e
-      [150] notas/mês). Se possível, cronometrar algumas notas reais.
+- [x] Tempos e volume: 8 min por nota e 120 notas/mês (16 h/mês → cerca de 2 h com o robô).
+      O "~1 min de conferência por nota" com o robô é estimativa; ajustem se medirem outro valor.
 - [ ] Nomes dos colegas, curso e professor na capa e no último slide.
 
 ## 10. Perguntas que o professor pode fazer
@@ -295,7 +297,7 @@ pytest, que rodam no GitHub a cada envio.
 
 | Entrega | Status | Onde |
 |---|---|---|
-| Apresentação (case, justificativa, AS-IS, TO-BE, código, vídeo, ganhos) | ✅ pronta; falta preencher os colchetes | Link compartilhado pelo Kaua |
+| Apresentação (case, justificativa, AS-IS, TO-BE, código, vídeo, ganhos) | ✅ pronta; falta só os nomes na capa | Link compartilhado pelo Kaua |
 | Vídeo da execução | ✅ pronto (70 s) | Arquivo enviado pelo Kaua; também está dentro do slide 15 |
 | Código-fonte | ✅ | Este repositório |
 | Evidências de teste (sucesso e insucesso) | ✅ 15/15 cenários aprovados | `python evidencias/gerar_evidencias.py` |
