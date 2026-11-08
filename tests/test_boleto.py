@@ -49,7 +49,7 @@ def test_le_boleto(tmp_path):
     assert boleto.vencimento == date(2026, 11, 13)
     assert boleto.valor == Decimal("3250.90")
     assert boleto.beneficiario == "DISTRIBUIDORA ALFA COMERCIO LTDA"
-    assert "12.345.678/0001-95" in boleto.cnpjs
+    assert "99.001.122/0001-60" in boleto.cnpjs
     assert boleto.banco == "237"
     assert not boleto.avisos
 
@@ -82,9 +82,9 @@ def test_boleto_parcelado(tmp_path):
 
 def test_duas_notas_no_mesmo_email_sao_pareadas_pelo_cnpj(tmp_path):
     outra = _escrever(tmp_path / "nf_beta.pdf",
-                      pagina_danfe(numero=990, cnpj="55666777000108", empresa="BETA INDUSTRIA SA", valor="800,00"))
+                      pagina_danfe(numero=990, cnpj="99004455000142", empresa="BETA INDUSTRIA SA", valor="800,00"))
     boleto_beta = _escrever(tmp_path / "boleto_beta.pdf",
-                            pagina_boleto("BETA INDUSTRIA SA", "55.666.777/0001-08", "990",
+                            pagina_boleto("BETA INDUSTRIA SA", "99.004.455/0001-42", "990",
                                           date(2026, 11, 20), "800,00"))
     lancs = processar_documentos([
         _pdf(tmp_path, gerar_boleto_alfa, "boleto_alfa.pdf"),
@@ -140,7 +140,7 @@ def test_email_encaminhado_como_anexo(tmp_path):
 
 # ------------------------------- várias notas do mesmo fornecedor no e-mail ----
 
-ALFA = ("DISTRIBUIDORA ALFA COMÉRCIO LTDA", "12.345.678/0001-95")
+ALFA = ("DISTRIBUIDORA ALFA COMÉRCIO LTDA", "99.001.122/0001-60")
 LIVRE_1, LIVRE_2 = "1111100000000000000000001", "2222200000000000000000002"
 
 

@@ -23,8 +23,8 @@ def cfg(tmp_path):
         pasta_conferencia=tmp_path / "conferencia",
         mes_referencia="vencimento",
         unidades=[
-            Unidade("Centro", CENTRO, cnpjs=["11.111.111/0001-11"], enderecos=["Rua das Acácias, 100"]),
-            Unidade("Norte", NORTE, cnpjs=["11.111.111/0002-00"], enderecos=["Av. Atlântica, 500"],
+            Unidade("Centro", CENTRO, cnpjs=["99.005.566/0001-73"], enderecos=["Rua das Acácias, 100"]),
+            Unidade("Norte", NORTE, cnpjs=["99.005.566/0002-54"], enderecos=["Av. Atlântica, 500"],
                     palavras_email=["norte"]),
         ],
         regras=[
@@ -86,7 +86,7 @@ def test_regra_de_aba_e_unidade_por_endereco(cfg):
 
 def test_unidade_por_cnpj_tem_prioridade_sobre_endereco(cfg):
     r = _situacoes(atualizar_capas(cfg, [
-        nota(7003, "BETA LINK SA", "6200.00", date(2026, 10, 10), cnpj_dest="11.111.111/0002-00"),
+        nota(7003, "BETA LINK SA", "6200.00", date(2026, 10, 10), cnpj_dest="99.005.566/0002-54"),
     ]))
     assert (r["7003"].unidade, r["7003"].criterio) == ("Norte", "CNPJ do destinatário")
 

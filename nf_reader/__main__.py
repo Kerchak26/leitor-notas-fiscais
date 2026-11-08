@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 
@@ -96,8 +97,35 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("caminho", type=Path)
     c = sub.add_parser("capas", parents=[comuns],
                        help="refaz as cópias das capas com as notas já lidas (após mudar capas.toml)")
-    c.set_defaults(capas=Path("capas.toml"))
+    r = sub.add_parser("rpa", parents=[comuns], help="executa o robô completo (regras, API, Excel, ERP, logs)")
+    r.add_argument("origem", choices=["email", "pasta"], help="de onde vêm os documentos")
+    r.add_argument("caminho", type=Path, nargs="?", help="pasta com os PDFs (origem 'pasta')")
+    r.add_argument("--erp", action="store_true", help="lança os títulos aprovados no ERP via Selenium")
+    r.add_argument("--url-erp", help="endereço do ERP (padrão: erp_simulado/index.html)")
+    r.add_argument("--visivel", action="store_true", help="mostra o navegador durante o lançamento no ERP")
+    r.add_argument("--pausa", type=float, default=0.0, help="pausa na digitação do ERP, para gravar vídeo")
+    r.add_argument("--sem-api", action="store_true", help="não consulta a BrasilAPI")
+    r.add_argument("--url-api", default=None, help="endereço base da API (testes de indisponibilidade)")
+    r.add_argument("--modo-cnpj", choices=["avisar", "bloquear", "desligado"], default="avisar",
+                   help="CNPJ não encontrado na Receita: avisar (padrão), bloquear ou não consultar")
+    r.add_argument("--hoje", type=lambda t: datetime.strptime(t, "%d/%m/%Y").date(),
+                   help="data de referência dd/mm/aaaa (para testes)")
+    r.add_argument("--pasta-saida", type=Path, default=Path("dados"))
     args = ap.parse_args(argv)
+
+    if args.comando == "rpa":
+        from .api_brasil import URL_PADRAO
+        from .rpa import OpcoesRPA, executar
+
+        if args.origem == "pasta" and not args.caminho:
+            ap.error("informe a pasta com os PDFs: python -m nf_reader rpa pasta CAMINHO")
+        resultado = executar(OpcoesRPA(
+            origem=args.origem, caminho=args.caminho, pasta_saida=args.pasta_saida, usar_erp=args.erp,
+            url_erp=args.url_erp, headless=not args.visivel, pausa_erp=args.pausa,
+            arquivo_capas=args.capas, url_api=args.url_api or URL_PADRAO, usar_api=not args.sem_api,
+            modo_cnpj=args.modo_cnpj, hoje=args.hoje,
+        ))
+        raise SystemExit(0 if resultado.relatorio else 1)
 
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO,
                         format="%(asctime)s %(levelname)s %(message)s", datefmt="%H:%M:%S")
@@ -106,7 +134,7 @@ def main(argv: list[str] | None = None) -> None:
         config.arquivo_saida = args.saida
 
     if args.comando == "capas":
-        lancar_nas_capas(args.capas, [])
+        lancar_nas_capas(args.capas or Path("capas.toml"), [])
         return
 
     lancamentos = processar_email(config) if args.comando == "email" else processar_pasta(args.caminho)

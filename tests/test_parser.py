@@ -28,7 +28,7 @@ def test_danfe(danfe):
     assert danfe.numero == "4587"
     assert danfe.serie == "1"
     assert danfe.emitente == "DISTRIBUIDORA ALFA COMERCIO LTDA"
-    assert danfe.cnpj_emitente == "12.345.678/0001-95"
+    assert danfe.cnpj_emitente == "99.001.122/0001-60"
     assert danfe.data_emissao == date(2026, 10, 14)
     assert danfe.data_vencimento == date(2026, 11, 13)
     assert danfe.valor_total == Decimal("3250.90")
@@ -38,7 +38,7 @@ def test_danfe(danfe):
 def test_nfse(nfse):
     assert nfse.numero == "2026000123"
     assert nfse.emitente == "TECH SOLUCOES EM SOFTWARE EIRELI"
-    assert nfse.cnpj_emitente == "11.222.333/0001-81"
+    assert nfse.cnpj_emitente == "99.002.233/0001-90"
     assert nfse.data_emissao == date(2026, 10, 3)
     assert nfse.data_vencimento is None  # o vencimento vem do boleto
     assert nfse.valor_total == Decimal("12544.00")

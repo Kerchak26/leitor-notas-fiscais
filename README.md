@@ -22,6 +22,7 @@ da unidade certa, no contrato e no mês certos.
 - [Instalação](#instalação)
 - [Uso no dia a dia](#uso-no-dia-a-dia)
 - [Lançamento nas capas de custos](#lançamento-nas-capas-de-custos)
+- [Robô completo (RPA)](#robô-completo-rpa)
 - [Arquitetura](#arquitetura)
 - [Testes](#testes)
 - [Limitações e próximos passos](#limitações-e-próximos-passos)
@@ -182,13 +183,59 @@ A configuração fica em `capas.toml` (veja o modelo comentado em
 [[unidades]]
 nome = "Centro"
 arquivo = "2026 - Custos - Unidade Centro.xlsx"
-cnpjs = ["11.111.111/0001-11"]
+cnpjs = ["99.005.566/0001-73"]
 enderecos = ["Rua das Acácias, 100"]
 
 [[regras]]                     # a marca "Gama" fatura como "Ômega Telecomunicações"
 fornecedor = "OMEGA TELECOMUNICACOES"
 aba = "Gama - Telefonia Móvel"
 ```
+
+## Robô completo (RPA)
+
+O comando `rpa` executa o processo de ponta a ponta, como um robô de RPA, e foi a
+entrega do projeto acadêmico:
+
+```bash
+python -m nf_reader rpa pasta dados/cenarios/principal --erp            # PDFs de uma pasta
+python -m nf_reader rpa email --erp --capas                             # direto da caixa de e-mail
+python -m nf_reader rpa pasta dados/cenarios/principal --erp --visivel --pausa 0.3   # para gravar vídeo
+```
+
+| Etapa (no log) | O que faz |
+|---|---|
+| 1. Captura | Lê os e-mails (IMAP) ou uma pasta; cada e-mail é um grupo de PDFs |
+| 2. Leitura | Separa notas e boletos e associa um ao outro |
+| 3. Regras | Valida com **regex** e aplica as regras de negócio, consultando a **BrasilAPI** |
+| 4. Excel | Planilha de controle das notas |
+| 5. Capas | Lançamento nas capas de custos (opcional, `--capas`) |
+| 6. ERP | **Selenium** faz login no ERP, digita cada título aprovado e lê o protocolo (`--erp`) |
+| 7. Relatório | `relatorio_execucao_*.xlsx`: SUCESSO / INSUCESSO / IGNORADO com o motivo |
+
+**Regras de negócio** ([`regras.py`](nf_reader/regras.py)): CNPJ do emitente válido (regex +
+dígito verificador), situação cadastral na Receita (BrasilAPI), boleto presente e com linha
+digitável válida, valor do boleto igual ao da nota, boleto não vencido, data de pagamento no
+próximo dia útil (feriados da BrasilAPI), prioridade URGENTE até 3 dias úteis e bloqueio de
+duplicidade (histórico de protocolos).
+
+**Resiliência:** cada e-mail, consulta à API e título do ERP roda em `try/except`. PDF
+corrompido, API fora do ar (3 tentativas com espera crescente) ou ERP fora do ar viram
+INSUCESSO ou aviso no relatório, e o robô segue para o próximo item. **Logs** de todas as
+etapas e de cada campo digitado ficam em `dados/logs/rpa_AAAAMMDD_HHMMSS.log`.
+
+**ERP de demonstração:** [`erp_simulado/index.html`](erp_simulado/index.html) imita um sistema
+de contas a pagar (login `rpa.financeiro` / `demo123`, validação de campos, protocolo e
+bloqueio de duplicidade), já que o ERP real da empresa não pode ser usado.
+
+**Cenários e evidências de teste:**
+
+```bash
+python tests/cenarios_rpa.py                 # gera os 15 cenários (sucesso e insucesso)
+python evidencias/gerar_evidencias.py        # roda todos e gera Evidencias_de_Teste_RPA.docx
+```
+
+O Selenium usa o Google Chrome instalado (o driver é baixado automaticamente). Em ambientes
+sem Chrome, aponte `CHROME_BINARY` e `CHROMEDRIVER` para os executáveis.
 
 ## Arquitetura
 
@@ -229,6 +276,11 @@ aba = "Gama - Telefonia Móvel"
 | [`exporter.py`](nf_reader/exporter.py) | Planilha Excel/CSV e controle de duplicados |
 | [`capas.py`](nf_reader/capas.py) | Lançamento nas capas de custos |
 | [`config.py`](nf_reader/config.py) | Leitura do `.env` |
+| [`validacoes.py`](nf_reader/validacoes.py) | Validação e formatação com expressões regulares |
+| [`api_brasil.py`](nf_reader/api_brasil.py) | BrasilAPI: feriados e CNPJ, com novas tentativas e cache |
+| [`regras.py`](nf_reader/regras.py) | Regras de negócio: SUCESSO ou INSUCESSO com o motivo |
+| [`erp_selenium.py`](nf_reader/erp_selenium.py) | Robô Selenium que lança os títulos no ERP |
+| [`rpa.py`](nf_reader/rpa.py) | Orquestrador das 7 etapas, logs e relatório de execução |
 
 Os algoritmos (validação da chave de acesso, decodificação do fator de vencimento,
 leitura por colunas, associação de boletos etc.) estão explicados em
@@ -240,13 +292,15 @@ leitura por colunas, associação de boletos etc.) estão explicados em
 - **pdfplumber**: extração de texto de PDF preservando o layout
 - **openpyxl**: leitura e escrita de planilhas Excel
 - **imaplib / email** (biblioteca padrão): acesso ao e-mail
+- **requests**: integração com a BrasilAPI
+- **Selenium**: automação do navegador (lançamento no ERP)
 - **pytest** + **reportlab** (geração de PDFs fictícios para os testes)
 - **GitHub Actions**: testes automáticos a cada push
 
 ## Testes
 
 ```bash
-python -m pytest            # 27 testes
+python -m pytest            # 54 testes
 ```
 
 Os testes geram na hora PDFs fictícios de notas, boletos e capas de custos, e cobrem,

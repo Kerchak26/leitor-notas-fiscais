@@ -24,14 +24,14 @@ mes_referencia = "vencimento"
 [[unidades]]
 nome = "Centro"
 arquivo = "2026 - Custos - Unidade Centro.xlsx"
-cnpjs = ["11.111.111/0001-11"]
+cnpjs = ["99.005.566/0001-73"]
 enderecos = ["Rua das Acácias, 100"]
 palavras_email = ["centro"]
 
 [[unidades]]
 nome = "Norte"
 arquivo = "2026 - Custos - Unidade Norte.xlsx"
-cnpjs = ["11.111.111/0002-00"]
+cnpjs = ["99.005.566/0002-54"]
 enderecos = ["Av. Atlântica, 500"]
 palavras_email = ["norte"]
 

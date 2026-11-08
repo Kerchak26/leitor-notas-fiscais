@@ -14,6 +14,7 @@ cada decisão foi tomada. O uso do programa está no [README](../README.md).
 7. [Lançamento nas capas de custos](#7-lançamento-nas-capas-de-custos)
 8. [Idempotência: rodar várias vezes sem duplicar](#8-idempotência-rodar-várias-vezes-sem-duplicar)
 9. [Princípios de projeto](#9-princípios-de-projeto)
+10. [O robô completo (RPA)](#10-o-robô-completo-rpa)
 
 ---
 
@@ -246,3 +247,29 @@ ainda não está nela. Consequências:
 - **Testes com dados fictícios gerados na hora.** O repositório não contém nenhum
   documento real; `tests/gerar_exemplos.py` gera notas, boletos (com dígitos
   verificadores válidos) e capas de custos.
+
+## 10. O robô completo (RPA)
+
+`rpa.py` orquestra as 7 etapas e registra cada uma no log. As peças novas:
+
+- **Regras de negócio** (`regras.py`): cada lançamento sai `SUCESSO` ou `INSUCESSO` com a
+  lista completa de motivos. As regras não param na primeira falha, porque o analista
+  precisa saber tudo o que corrigir de uma vez.
+- **BrasilAPI** (`api_brasil.py`): feriados nacionais (data de pagamento no próximo dia útil
+  e prioridade por dias úteis) e situação cadastral do CNPJ. Cada chamada tem tempo limite,
+  3 tentativas com espera crescente (1 s, 2 s) e cache em disco. Da resposta de CNPJ só são
+  guardados razão social e situação: os dados pessoais dos sócios são descartados.
+  CNPJ não encontrado gera aviso por padrão (`--modo-cnpj bloquear` torna INSUCESSO).
+- **Selenium** (`erp_selenium.py`): esperas explícitas (`WebDriverWait`) em vez de pausas
+  fixas, print da tela em cada lançamento e em cada erro, e o protocolo lido de volta é
+  validado com regex (`CP-AAAA-NNNNNN`). Uma falha temporária é tentada de novo uma vez;
+  uma recusa do ERP (ex.: duplicidade) não.
+- **Resiliência:** os níveis de `try/except` são o e-mail (um PDF ruim não derruba os
+  outros), o lançamento (uma regra com erro inesperado vira INSUCESSO), a API (aviso
+  "não verificado") e o ERP (todos os pendentes viram INSUCESSO com o motivo). O relatório
+  é gerado mesmo quando etapas anteriores falham.
+- **Duplicidade:** `historico_rpa.json` guarda o protocolo de cada lançamento feito; o
+  mesmo e-mail processado de novo sai como `IGNORADO`, citando o protocolo anterior.
+- **Cenários de teste** (`tests/cenarios_rpa.py`): as datas são relativas à data da
+  execução, então "boleto a vencer" nunca envelhece. Os CNPJs fictícios têm dígito
+  verificador válido e foram conferidos como inexistentes na Receita.

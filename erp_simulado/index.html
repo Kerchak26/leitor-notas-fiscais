@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinSys · Contas a Pagar (ambiente simulado)</title>
+<style>
+  :root {
+    --fundo: #f3f5f8; --cartao: #ffffff; --texto: #1d2633; --suave: #5b6878;
+    --primaria: #1f4e78; --primaria-escura: #163a5a; --borda: #d6dde6;
+    --ok: #1e7b45; --ok-fundo: #e3f4ea; --erro: #b42318; --erro-fundo: #fdecea; --urgente: #b54708;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 "Segoe UI", Roboto, Arial, sans-serif; background: var(--fundo); color: var(--texto); }
+  header { background: var(--primaria); color: #fff; padding: 12px 24px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 18px; margin: 0; font-weight: 600; }
+  header .modulo { opacity: .8; }
+  header .usuario { margin-left: auto; font-size: 13px; opacity: .9; }
+  .aviso-demo { background: #fff4d6; color: #7a5a00; text-align: center; font-size: 12px; padding: 4px; }
+  main { max-width: 1180px; margin: 24px auto; padding: 0 16px; display: grid; gap: 20px; }
+  .cartao { background: var(--cartao); border: 1px solid var(--borda); border-radius: 8px; padding: 20px; }
+  .cartao h2 { margin: 0 0 16px; font-size: 16px; color: var(--primaria); }
+  #tela-login { max-width: 360px; margin: 80px auto; }
+  .grade { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 16px; }
+  .grade .largo { grid-column: span 2; } .grade .inteiro { grid-column: 1 / -1; }
+  label { display: block; font-size: 12px; color: var(--suave); margin-bottom: 4px; font-weight: 600; }
+  input, select { width: 100%; padding: 8px 10px; border: 1px solid var(--borda); border-radius: 6px; font: inherit; background: #fff; }
+  input:focus, select:focus { outline: 2px solid #9cc3e6; border-color: var(--primaria); }
+  input.invalido { border-color: var(--erro); background: var(--erro-fundo); }
+  button { background: var(--primaria); color: #fff; border: 0; border-radius: 6px; padding: 9px 18px; font: inherit; font-weight: 600; cursor: pointer; }
+  button:hover { background: var(--primaria-escura); }
+  .acoes { display: flex; gap: 12px; align-items: center; margin-top: 16px; }
+  .mensagem { padding: 10px 14px; border-radius: 6px; margin-top: 14px; display: none; font-weight: 600; }
+  .mensagem.ok { display: block; background: var(--ok-fundo); color: var(--ok); }
+  .mensagem.erro { display: block; background: var(--erro-fundo); color: var(--erro); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--borda); white-space: nowrap; }
+  th { color: var(--suave); font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+  td.valor { text-align: right; font-variant-numeric: tabular-nums; }
+  .tag { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+  .tag.URGENTE { background: #fef0c7; color: var(--urgente); } .tag.NORMAL { background: #e8eef5; color: var(--primaria); }
+  .vazio { color: var(--suave); text-align: center; padding: 18px; }
+  .oculto { display: none !important; }
+  @media (max-width: 800px) { .grade { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>FinSys</h1><span class="modulo">Contas a Pagar</span>
+  <span class="usuario" id="usuario-logado"></span>
+</header>
+<div class="aviso-demo">Ambiente simulado para demonstração do robô: nenhum dado é enviado para lugar algum.</div>
+
+<section id="tela-login" class="cartao">
+  <h2>Acesso ao sistema</h2>
+  <form id="form-login" autocomplete="off">
+    <label for="login-usuario">Usuário</label>
+    <input id="login-usuario" name="usuario">
+    <div style="height:10px"></div>
+    <label for="login-senha">Senha</label>
+    <input id="login-senha" name="senha" type="password">
+    <div class="acoes"><button id="btn-entrar" type="submit">Entrar</button></div>
+    <div id="msg-login" class="mensagem"></div>
+  </form>
+</section>
+
+<main id="tela-principal" class="oculto">
+  <section class="cartao">
+    <h2>Novo título a pagar</h2>
+    <form id="form-titulo" autocomplete="off" novalidate>
+      <div class="grade">
+        <div class="largo"><label for="fornecedor">Fornecedor (razão social)</label><input id="fornecedor"></div>
+        <div><label for="cnpj">CNPJ</label><input id="cnpj" placeholder="00.000.000/0000-00"></div>
+        <div><label for="unidade">Unidade / centro de custo</label><input id="unidade"></div>
+        <div><label for="numero-nf">Nº da nota fiscal</label><input id="numero-nf"></div>
+        <div><label for="parcela">Parcela</label><input id="parcela" placeholder="1/1"></div>
+        <div><label for="valor">Valor (R$)</label><input id="valor" placeholder="0,00"></div>
+        <div><label for="prioridade">Prioridade</label>
+          <select id="prioridade"><option>NORMAL</option><option>URGENTE</option></select></div>
+        <div><label for="vencimento">Vencimento</label><input id="vencimento" placeholder="dd/mm/aaaa"></div>
+        <div><label for="data-pagamento">Data de pagamento</label><input id="data-pagamento" placeholder="dd/mm/aaaa"></div>
+        <div class="largo"><label for="linha-digitavel">Linha digitável do boleto</label><input id="linha-digitavel"></div>
+      </div>
+      <div class="acoes"><button id="btn-salvar" type="submit">Salvar título</button></div>
+      <div id="msg-titulo" class="mensagem"></div>
+    </form>
+  </section>
+
+  <section class="cartao">
+    <h2>Títulos cadastrados <span id="contador" style="color:var(--suave);font-weight:400"></span></h2>
+    <table>
+      <thead><tr><th>Protocolo</th><th>Fornecedor</th><th>CNPJ</th><th>NF</th><th>Parcela</th>
+        <th>Vencimento</th><th>Pagamento</th><th class="valor">Valor (R$)</th><th>Prioridade</th></tr></thead>
+      <tbody id="tabela-titulos"><tr><td colspan="9" class="vazio">Nenhum título cadastrado.</td></tr></tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+  // Credenciais fictícias do ambiente de demonstração
+  const USUARIO = "rpa.financeiro", SENHA = "demo123";
+  const RE = {
+    cnpj: /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/,
+    valor: /^\d{1,3}(\.\d{3})*,\d{2}$/,
+    data: /^\d{2}\/\d{2}\/\d{4}$/,
+    linha: /^\d{5}\.\d{5} \d{5}\.\d{6} \d{5}\.\d{6} \d \d{14}$/,
+    nf: /^\d{1,12}$/,
+    parcela: /^\d+\/\d+$/,
+  };
+  const titulos = [];
+  let sequencial = 1000;
+
+  const $ = (id) => document.getElementById(id);
+  function mensagem(id, texto, tipo) { const m = $(id); m.textContent = texto; m.className = "mensagem " + tipo; }
+
+  $("form-login").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if ($("login-usuario").value === USUARIO && $("login-senha").value === SENHA) {
+      $("tela-login").classList.add("oculto");
+      $("tela-principal").classList.remove("oculto");
+      $("usuario-logado").textContent = "Usuário: " + USUARIO;
+    } else {
+      mensagem("msg-login", "Usuário ou senha inválidos.", "erro");
+    }
+  });
+
+  $("form-titulo").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const campos = {
+      fornecedor: $("fornecedor").value.trim(), cnpj: $("cnpj").value.trim(), unidade: $("unidade").value.trim(),
+      nf: $("numero-nf").value.trim(), parcela: $("parcela").value.trim() || "1/1", valor: $("valor").value.trim(),
+      prioridade: $("prioridade").value, vencimento: $("vencimento").value.trim(),
+      pagamento: $("data-pagamento").value.trim(), linha: $("linha-digitavel").value.trim(),
+    };
+    const regras = [["cnpj", RE.cnpj], ["valor", RE.valor], ["vencimento", RE.data], ["data-pagamento", RE.data],
+                    ["linha-digitavel", RE.linha], ["numero-nf", RE.nf], ["parcela", RE.parcela]];
+    const invalidos = [];
+    for (const [id, re] of regras) {
+      const ok = re.test($(id).value.trim() || (id === "parcela" ? "1/1" : ""));
+      $(id).classList.toggle("invalido", !ok);
+      if (!ok) invalidos.push($(id).previousElementSibling.textContent);
+    }
+    if (!campos.fornecedor) invalidos.push("Fornecedor");
+    if (invalidos.length) { mensagem("msg-titulo", "Campos inválidos: " + invalidos.join(", "), "erro"); return; }
+    if (titulos.some(t => t.cnpj === campos.cnpj && t.nf === campos.nf && t.parcela === campos.parcela)) {
+      mensagem("msg-titulo", `Título já cadastrado: NF ${campos.nf} (${campos.parcela}).`, "erro"); return;
+    }
+    const protocolo = `CP-${new Date().getFullYear()}-${String(++sequencial).padStart(6, "0")}`;
+    titulos.push({ protocolo, ...campos });
+    desenharTabela();
+    mensagem("msg-titulo", "Título salvo. Protocolo: ", "ok");
+    const span = document.createElement("span"); span.id = "protocolo"; span.textContent = protocolo;
+    $("msg-titulo").appendChild(span);
+    $("form-titulo").reset();
+  });
+
+  const esc = (s) => String(s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+  function desenharTabela() {
+    $("tabela-titulos").innerHTML = titulos.map(t => `<tr><td>${esc(t.protocolo)}</td><td>${esc(t.fornecedor)}</td>
+      <td>${esc(t.cnpj)}</td><td>${esc(t.nf)}</td><td>${esc(t.parcela)}</td><td>${esc(t.vencimento)}</td>
+      <td>${esc(t.pagamento)}</td><td class="valor">${esc(t.valor)}</td>
+      <td><span class="tag ${t.prioridade === "URGENTE" ? "URGENTE" : "NORMAL"}">${esc(t.prioridade)}</span></td></tr>`).join("");
+    $("contador").textContent = `(${titulos.length})`;
+  }
+</script>
+</body>
+</html>

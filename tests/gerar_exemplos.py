@@ -70,10 +70,10 @@ def _escrever(caminho: Path, *paginas: list[Linha]) -> Path:
 
 # ------------------------------------------------------------ documentos ----
 
-def pagina_danfe(numero: int = 4587, cnpj: str = "12345678000195",
+def pagina_danfe(numero: int = 4587, cnpj: str = "99001122000160",
                  empresa: str = "DISTRIBUIDORA ALFA COMÉRCIO LTDA", valor: str = "3.250,90",
                  vencimento: str = "13/11/2026", destinatario: str = "EMPRESA CLIENTE S.A.",
-                 cnpj_destinatario: str = "98.765.432/0001-10",
+                 cnpj_destinatario: str = "99.006.677/0001-02",
                  endereco: str = "RUA DAS ACÁCIAS, 100") -> list[Linha]:
     chave = chave_ficticia(cnpj, 1, numero)
     cnpj_fmt = f"{cnpj[:2]}.{cnpj[2:5]}.{cnpj[5:8]}/{cnpj[8:12]}-{cnpj[12:]}"
@@ -107,7 +107,7 @@ def pagina_nfse() -> list[Linha]:
         "Data de Emissão: 03/10/2026 10:42:11",
         "PRESTADOR DE SERVIÇOS",
         "Razão Social: TECH SOLUÇÕES EM SOFTWARE EIRELI",
-        "CNPJ: 11.222.333/0001-81",
+        "CNPJ: 99.002.233/0001-90",
         "TOMADOR DE SERVIÇOS",
         "Razão Social: EMPRESA CLIENTE S.A.",
         "Discriminação: Desenvolvimento de sistema - outubro/2026",
@@ -135,7 +135,7 @@ def pagina_boleto(beneficiario: str, cnpj: str, documento: str, vencimento: date
         [(40, "Instruções: Não receber após 30 dias do vencimento. Referente à NF " + documento),
          (420, "(=) Valor do Documento")],
         [(420, valor)],
-        "Pagador: EMPRESA CLIENTE S.A. - CNPJ 98.765.432/0001-10",
+        "Pagador: EMPRESA CLIENTE S.A. - CNPJ 99.006.677/0001-02",
         [(40, "FICHA DE COMPENSAÇÃO"), (380, "Autenticação Mecânica")],
     ]
     return [[(40, "RECIBO DO PAGADOR")], *ficha[1:], "- " * 50, *ficha]
@@ -211,8 +211,8 @@ def gerar_capa_exemplo(caminho: Path) -> Path:
 
 # ------------------------------------------------- arquivos de exemplo ----
 
-ALFA = ("DISTRIBUIDORA ALFA COMÉRCIO LTDA", "12.345.678/0001-95")
-TECH = ("TECH SOLUÇÕES EM SOFTWARE EIRELI", "11.222.333/0001-81")
+ALFA = ("DISTRIBUIDORA ALFA COMÉRCIO LTDA", "99.001.122/0001-60")
+TECH = ("TECH SOLUÇÕES EM SOFTWARE EIRELI", "99.002.233/0001-90")
 
 
 def gerar_danfe(caminho: Path) -> Path:
@@ -244,9 +244,9 @@ def gerar_nota_e_boleto_mesmo_pdf(caminho: Path) -> Path:
 def gerar_notas_alfa_telecom(pasta: Path) -> None:
     """E-mail com duas notas do mesmo contrato e seus boletos (somam o valor do mês)."""
     pasta.mkdir(parents=True, exist_ok=True)
-    emitente = dict(cnpj="44555666000171", empresa="ALFA TELECOM COMÉRCIO E SERVIÇOS LTDA",
-                    destinatario="EMPRESA CLIENTE S.A. - UNIDADE CENTRO", cnpj_destinatario="11.111.111/0001-11")
-    beneficiario = ("ALFA TELECOM COMÉRCIO E SERVIÇOS LTDA", "44.555.666/0001-71")
+    emitente = dict(cnpj="99003344000111", empresa="ALFA TELECOM COMÉRCIO E SERVIÇOS LTDA",
+                    destinatario="EMPRESA CLIENTE S.A. - UNIDADE CENTRO", cnpj_destinatario="99.005.566/0001-73")
+    beneficiario = ("ALFA TELECOM COMÉRCIO E SERVIÇOS LTDA", "99.003.344/0001-11")
     for numero, valor, venc, livre in [(50001, "8.000,00", date(2026, 10, 14), "1111100000000000000000001"),
                                        (50002, "10.450,00", date(2026, 10, 13), "2222200000000000000000002")]:
         _escrever(pasta / f"NF {numero}.pdf",
